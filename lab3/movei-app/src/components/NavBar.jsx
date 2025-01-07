@@ -32,8 +32,11 @@ export default function NavBar() {
             <Link className="nav-link" to="/movie-details">
               details
             </Link>
-            <Link className="nav-link" to="/watchList">
-               watch list
+            <Link className="nav-link" to="/Favourite">
+               favourite
+            </Link>
+            <Link className="nav-link" to="/Form">
+               form
             </Link>
           </div>
         </div>

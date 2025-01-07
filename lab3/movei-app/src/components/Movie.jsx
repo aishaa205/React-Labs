@@ -2,15 +2,20 @@ import React, { useEffect, useState } from 'react'
 import axiosInstance from '../Api/config'
 import { useNavigate } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
-import Details from '../pages/Details';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { createSlice } from "@reduxjs/toolkit";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleFavorite,clearFavorites } from '../Store/slices/counter'; 
+
 function Movie() {
 
   const navigate = useNavigate();
   const [movieList,setmovieList]=useState([]);
- 
-  
- 
-  
+  const dispatch = useDispatch(); //23del 3aleha 
+  const favoriteMovies = useSelector((state) => state.favoritemovie.favoriteMovies); // Access favorites b selector
+
+  console.log(movieList)
 
     const getMovei=()=>{
       axiosInstance
@@ -28,7 +33,21 @@ function Movie() {
       navigate(`/movie-details/${movie.id}`,{ state: { movieData: movie } }); 
     };
 
-    console.log(movieList)
+    // const isLiked = (movieId) => favoriteMovies.some((movie) => movie.id === movieId);
+    // const handleViewFavorites = () => {
+    //   navigate('/favorites', { state: { likedMovies, movieList } });
+    // };
+
+
+   
+     
+    const toggleLike = (movie) => {
+      //kda ba3t el moie ll reducer b el dispatch 3l4an t check 3leha 
+       dispatch(toggleFavorite(movie));
+    };
+
+
+
 
   return (
    
@@ -39,7 +58,7 @@ function Movie() {
 
   // < to={`/movie-details/${movie.id}`} >
     <div  key={movie.id} className="col" style={{ textDecoration: 'none' }}>
-      <Card  style={{ width: '400px', height: '600px', marginLeft: '10px', marginTop: '10px' }}>
+      <Card  style={{ width: '380px', height: '600px', marginLeft: '10px', marginTop: '10px',padding:"13px" }}>
        <Card.Img
            style={{ textAlign: 'center' ,height:"350px"}}
             src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -49,14 +68,23 @@ function Movie() {
          <Card.Title style={{ fontSize: '18px' }}>{movie.title}</Card.Title>
          <Card.Text style={{ fontSize: '15px' }}>Language: {movie.original_language}</Card.Text>
          <div>
-
+         <FontAwesomeIcon icon={faHeart} size="lg"
+                    style={{
+                      color:favoriteMovies.some((m) => m.id === movie.id) ? 'green' : 'gray',
+                      cursor: 'pointer',
+                      float:'right',
+                        
+                    }}
+                    onClick={()=>toggleLike(movie)}
+                  />
+            <Card.Text style={{ fontSize: '15px' }}>Rating: {movie.vote_average}</Card.Text>
          </div>
          <Card.Text style={{ fontSize: '15px' }}>Release Date: {movie.release_date}</Card.Text>
-         <Card.Text style={{ fontSize: '15px' }}>Rating: {movie.vote_average}</Card.Text>
+        
          <div>
          <button className="btn btn-primary"style={{marginRight: '75px'}}  onClick={() => handleViewDetails(movie)} >View </button>
-         <button className="btn btn-primary">Add to watch list</button>
-          
+         <button className="btn btn-primary" >Add to watch list</button>
+         
           </div>
          
 
