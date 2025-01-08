@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react';
 import axiosInstance from '../Api/config'
 import { useNavigate } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
-import { createSlice } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleFavorite,clearFavorites } from '../Store/slices/counter'; 
+import { LanguageContext } from '../Context/LanguageContext';
+
 
 function Movie() {
 
@@ -15,30 +16,44 @@ function Movie() {
   const dispatch = useDispatch(); //23del 3aleha 
   const favoriteMovies = useSelector((state) => state.favoritemovie.favoriteMovies); // Access favorites b selector
 
+  const { lang } = useContext(LanguageContext);
   console.log(movieList)
 
-    const getMovei=()=>{
+
+  const translations = {
+    en: {
+      language: "Language",
+      rating: "Rating",
+      releaseDate: "Release Date",
+      view: "View",
+    },
+    ar: {
+      language: "اللغة",
+      rating: "التقييم",
+      releaseDate: "تاريخ الإصدار",
+      view: "عرض",
+    },
+  };
+
+  const t=translations[lang];
+
+  const getMovei=(lang)=>{
       axiosInstance
-       .get('https://api.themoviedb.org/3/discover/movie?api_key=9cbcf1d99531e0f449eeebe0eddca902' )
+       .get(`https://api.themoviedb.org/3/discover/movie?api_key=9cbcf1d99531e0f449eeebe0eddca902&language=${lang}` )
        .then(res=>setmovieList(res.data.results))
        .catch((err) => console.error(err));
        
-    }
+  }
 
     useEffect(()=>{
-      getMovei();
-    },[])
+      getMovei(lang);
+    },[lang])//3l4an y refresh lma el language tt8yar
 
     const handleViewDetails = (movie) => {
       navigate(`/movie-details/${movie.id}`,{ state: { movieData: movie } }); 
     };
 
-    // const isLiked = (movieId) => favoriteMovies.some((movie) => movie.id === movieId);
-    // const handleViewFavorites = () => {
-    //   navigate('/favorites', { state: { likedMovies, movieList } });
-    // };
-
-
+  
    
      
     const toggleLike = (movie) => {
@@ -66,7 +81,7 @@ function Movie() {
          <Card.Body>
           
          <Card.Title style={{ fontSize: '18px' }}>{movie.title}</Card.Title>
-         <Card.Text style={{ fontSize: '15px' }}>Language: {movie.original_language}</Card.Text>
+         <Card.Text style={{ fontSize: '15px' }}>{t.language}:{movie.original_language}</Card.Text>
          <div>
          <FontAwesomeIcon icon={faHeart} size="lg"
                     style={{
@@ -77,13 +92,12 @@ function Movie() {
                     }}
                     onClick={()=>toggleLike(movie)}
                   />
-            <Card.Text style={{ fontSize: '15px' }}>Rating: {movie.vote_average}</Card.Text>
+            <Card.Text style={{ fontSize: '15px' }}>{t.rating}: {movie.vote_average}</Card.Text>
          </div>
-         <Card.Text style={{ fontSize: '15px' }}>Release Date: {movie.release_date}</Card.Text>
+         <Card.Text style={{ fontSize: '15px' }}>{t.releaseDate}: {movie.release_date}</Card.Text>
         
          <div>
-         <button className="btn btn-primary"style={{marginRight: '75px'}}  onClick={() => handleViewDetails(movie)} >View </button>
-         <button className="btn btn-primary" >Add to watch list</button>
+         <button className="btn btn-primary"style={{marginRight: '75px'}}  onClick={() => handleViewDetails(movie)} >{t.view} </button>
          
           </div>
          

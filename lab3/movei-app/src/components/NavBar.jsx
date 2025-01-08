@@ -1,9 +1,19 @@
 
 import React from 'react'
 import { Link } from 'react-router-dom';
+import { useContext } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-export default function NavBar() {
+import { LanguageContext } from '../Context/LanguageContext';
 
+
+export default function NavBar() {
+  
+
+  const { lang, setLang } = useContext(LanguageContext);
+
+  const handleLanguageChange = (e) => {
+    setLang(e.target.value);
+  };
 
   return (
     
@@ -40,6 +50,18 @@ export default function NavBar() {
             </Link>
           </div>
         </div>
+        <div className="dropdown">
+            <select
+              className="form-select"
+             value={lang}
+             onChange={handleLanguageChange}
+              style={{ width: "100px" }}
+            >
+              <option value="en" >EN</option>
+              <option value="ar">AR</option>
+            </select>
+          </div>
+
       </div>
     </nav>
   

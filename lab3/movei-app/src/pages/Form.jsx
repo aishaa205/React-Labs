@@ -1,8 +1,69 @@
-import React, { useState } from 'react';
+import React, { useState ,useContext} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { LanguageContext } from '../Context/LanguageContext';
+
 export default function Form() {
     
+  const { lang } = useContext(LanguageContext);
+    
 
+  const translations = {
+    en: {
+      name: "Your Name",
+      username: "User Name",
+      email: "Email",
+      password: "Password",
+      confirmPassword: "Confirm Password",
+      submit: "Sign Up",
+      errors: {
+        name: "Name is required",
+        username: {
+          required: "Username is required",
+          spaces: "Username cannot contain spaces",
+        },
+        email: {
+          required: "Email is required",
+          invalid: "Invalid email format",
+        },
+        password: {
+          required: "Password is required",
+          weak: "Password must be at least 8 characters long, contain one uppercase, one lowercase, one digit, and one special character.",
+        },
+        confirmPassword: {
+          required: "Confirm password is required",
+          mismatch: "Passwords do not match",
+        },
+      },
+    },
+    ar: {
+      name: "اسمك",
+      username: "اسم المستخدم",
+      email: "البريد الإلكتروني",
+      password: "كلمة المرور",
+      confirmPassword: "تأكيد كلمة المرور",
+      submit: "سجل",
+      errors: {
+        name: "الاسم مطلوب",
+        username: {
+          required: "اسم المستخدم مطلوب",
+          spaces: "اسم المستخدم لا يمكن أن يحتوي على مسافات",
+        },
+        email: {
+          required: "البريد الإلكتروني مطلوب",
+          invalid: "تنسيق البريد الإلكتروني غير صالح",
+        },
+        password: {
+          required: "كلمة المرور مطلوبة",
+          weak: "يجب أن تكون كلمة المرور مكونة من 8 أحرف على الأقل، تحتوي على حرف كبير وحرف صغير ورقم ورمز خاص.",
+        },
+        confirmPassword: {
+          required: "تأكيد كلمة المرور مطلوب",
+          mismatch: "كلمتا المرور غير متطابقتين",
+        },
+      },
+    },
+  };
+  const t = translations[lang]; 
 
 
      const [formValue,setFormValue]= useState({
@@ -150,13 +211,16 @@ export default function Form() {
 
   return (
     <>
-      <div style={{marginTop:"180px",textAlign:"left"}}>
+     <div dir={lang === "ar" ? "rtl" : "ltr"}
+          className={lang === "ar" ? "text-right" : "tet-left"}
+    >
+      <div style={{marginTop:"180px", textAlign:lang === "ar" ? "right" : "left"}}>
       <div className="container mt-5 my-5" >
       <div className="row justify-content-center">
         <div className="col-md-6">
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="name" className="form-label">Your Name</label>
+              <label htmlFor="name" className="form-label">{t.name}</label>
               <input type="text" className="form-control" id="name" 
               name="name"
               value={formValue.name} 
@@ -168,7 +232,7 @@ export default function Form() {
                   )}
             </div>
             <div className="mb-3">
-              <label htmlFor="username" className="form-label">User Name</label>
+              <label htmlFor="username" className="form-label">{t.username}</label>
               <input type="username" className="form-control" id="username"
                name="username"
                value={formValue.username}
@@ -180,7 +244,7 @@ export default function Form() {
                   )}
             </div>
             <div className="mb-3">
-              <label htmlFor="email" className="form-label">Email</label>
+              <label htmlFor="email" className="form-label">{t.email}</label>
               <input type="email" className="form-control" id="email" 
               name="email"
               value={formValue.email} 
@@ -193,7 +257,7 @@ export default function Form() {
             </div>
         
             <div className="mb-3">
-              <label htmlFor="password" className="form-label">Password</label>
+              <label htmlFor="password" className="form-label">{t.password}</label>
               <input type="password" className="form-control" id="password"
                name="password"
                value={formValue.password}
@@ -205,7 +269,7 @@ export default function Form() {
                   )}
             </div>
             <div className="mb-3">
-              <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
+              <label htmlFor="confirmPassword" className="form-label">{t.confirmPassword}</label>
               <input type="password" className="form-control" id="confirmPassword" 
               name="confirmPassword"
               value={formValue.confirmPassword}
@@ -216,13 +280,13 @@ export default function Form() {
                     </div>
                   )}
             </div>
-            <button type="submit" className="btn btn-primary">Sign Up</button>
+            <button type="submit" className="btn btn-primary">{t.submit}</button>
           </form>
         </div>
       </div>
     </div>
     </div>
-
+  </div>
 
     </>
   )

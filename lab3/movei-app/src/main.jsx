@@ -9,7 +9,9 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
      {/* <App/> */}
   <Provider store={Store}>
+  
     <App/>
+    
   </Provider>
   </StrictMode>
 );
